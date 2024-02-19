@@ -6,14 +6,14 @@ export class ChartComponent extends Component {
   constructor(props) {
     super(props);
     this.chartRef = React.createRef();
-    this.chartContentOffset = 65;
-    this.inspectChartPlottingArea();
+    // this.inspectChartPlottingArea();
     
   }
   state = {
     data: [],
     showTemperature: true,
-    referenceLineX: 1000, // Initial position of the ReferenceLine in X-axis terms
+    showSignal: true,
+    referenceLineX: 0, // Initial position of the ReferenceLine in X-axis terms
   };
 
   componentDidMount() {
@@ -22,18 +22,22 @@ export class ChartComponent extends Component {
 
   generateData() {
     const newData = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 21; i++) {
       newData.push({
         time: i * 100,
-        voltage: Math.random() * 2500,
+        signal: Math.random() * 2500,
         temperature: Math.random() * 200,
       });
     }
     this.setState({ data: newData });
+    console.log('data:', newData);
   }
 
   toggleTemperature = () => {
     this.setState(prevState => ({ showTemperature: !prevState.showTemperature }));
+  };
+  toggleSignal = () => {
+    this.setState(prevState => ({ showSignal: !prevState.showSignal }));
   };
 
   handleMouseDown = (e) => {
@@ -63,7 +67,8 @@ export class ChartComponent extends Component {
   handleMouseMove = (e) => {
     if (!this.dragging) return;
     // 计算鼠标位置相对于图表的x坐标
-    const relativeX = e.clientX - this.chartRect.left - this.chartContentOffset;
+    const chartContentOffset = 65;
+    const relativeX = e.clientX - this.chartRect.left - chartContentOffset;
     // console.log('relativeX:', relativeX);
     // 假设每个数据点占据相同的水平空间（这简化了计算）
     // 你可能需要根据图表的具体比例尺调整这个逻辑
@@ -83,7 +88,7 @@ export class ChartComponent extends Component {
   };
 
   render() {
-    const { data, showTemperature, referenceLineX } = this.state;
+    const { data, showSignal, showTemperature, referenceLineX } = this.state;
 
     return (
       <div ref={this.chartRef}
@@ -96,18 +101,24 @@ export class ChartComponent extends Component {
           <input type="checkbox" checked={showTemperature} onChange={this.toggleTemperature} />
           Show Temperature
         </label>
+        <label>
+          <input type="checkbox" checked={showSignal} onChange={this.toggleSignal} />
+          Show Signal
+        </label>
         <LineChart width={900} height={600} data={data}
+        // if add margin, chartWidth and chartContentOffset need to be adjusted
                 // margin={{top: 5, right: 30, left: 20, bottom: 5}}
+
                 >
            <CartesianGrid strokeDasharray="3 3"/>
-           <XAxis dataKey="time"/>
-           <YAxis yAxisId="Voltage" orientation="left" />
+           <XAxis dataKey="time" interval={0}/>
+           <YAxis yAxisId="Signal" orientation="left" />
            <YAxis yAxisId="Temp" orientation="right" />
            <Tooltip/>
            <Legend />
-           <Line yAxisId="Voltage" type="monotone" dataKey="voltage" stroke="#8884d8" activeDot={{r: 8}}/>
+           {showSignal && <Line yAxisId="Signal" type="monotone" dataKey="signal" stroke="#8884d8"/>}
            {showTemperature && <Line yAxisId="Temp" type="monotone" dataKey="temperature" stroke="#82ca9d" />}
-           <ReferenceLine  strokeWidth={10} yAxisId="Voltage" x={referenceLineX} stroke="green" label="Drag me" ifOverflow="extendDomain" 
+           <ReferenceLine strokeDasharray="10 10" strokeWidth={10} yAxisId="Signal" x={referenceLineX} stroke="red" label="Reference line" ifOverflow="extendDomain" 
             onMouseDown={this.handleMouseDown} />
 
         </LineChart>
