@@ -1,13 +1,13 @@
-import { h } from 'preact';
-import { BarChartComponent } from '../../components/Barchart';
+// import { h } from 'preact';
+// import { BarChartComponent } from '../../components/Barchart';
 
 
-export function Pchart() {
+// export function Pchart() {
   
-  return (
-    <div class="pchart">
-      <BarChartComponent/>
-    </div>
-  );
-}
+//   return (
+//     <div class="pchart">
+//       <BarChartComponent/>
+//     </div>
+//   );
+// }
 

@@ -12,12 +12,12 @@ export function Header() {
 				<a href="/404" class={url == '/404' && 'active'}>
 					404
 				</a>
-				{/* <a href="/rechart" class={url == '/rechart' && 'active'}>
+				<a href="/rechart" class={url == '/rechart' && 'active'}>
 					Rechart
-				</a> */}
-				<a href="/pchart" class={url == '/pchart' && 'active'}>
-					Pchart
 				</a>
+				{/* <a href="/pchart" class={url == '/pchart' && 'active'}>
+					Pchart
+				</a> */}
 			</nav>
 		</header>
 	);
